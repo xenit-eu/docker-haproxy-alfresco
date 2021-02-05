@@ -11,7 +11,7 @@ This is the repository building Haproxy Docker images. At the moment there are 3
 
 An init script choses the right template based on an environment variable and creates the final haproxy configuration file. Templates are themselves scripts, to allow for further tweaking, for example adding a new kind of backend. 
 
-All images are automatically built by [jenkins-2](https://jenkins-2.xenit.eu) and published to [hub.xenit.eu](https://hub.xenit.eu).
+All images are automatically built by [jenkins-2](https://jenkins-2.xenit.eu) and published to [hub.xenit.eu/public/haproxy-alfresco](https://hub.xenit.eu/public/haproxy-alfresco).
 
 ## Environment variables
 
