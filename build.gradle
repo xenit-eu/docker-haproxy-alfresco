@@ -1,0 +1,24 @@
+plugins {
+    id 'eu.xenit.docker' version '5.2.0'
+}
+
+version = '0.0.1'
+boolean isRelease = System.env.BRANCH_NAME?.startsWith("release")
+if (!isRelease)
+   version += "-SNAPSHOT"
+
+task copyResources(type: Sync) {
+     from "$project.projectDir/src/main/resources/templates"
+     into "$project.buildDir/templates"
+}
+buildDockerImage.dependsOn(copyResources)
+
+dockerFile {
+    dockerFile = file("$project.projectDir/src/main/resources/Dockerfile")
+    dockerBuild {
+        // Repository to publish on.
+        repository = 'hub.xenit.eu/public/haproxy-alfresco'
+        tags = ["${version}"]
+        automaticTags = false	
+    }
+}

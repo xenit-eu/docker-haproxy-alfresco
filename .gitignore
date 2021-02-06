@@ -1,0 +1,12 @@
+.gradle
+**/build/
+.idea/
+pom*
+**/*class
+**/.project
+**/.settings
+**/.classpath
+**~
+#*
+**/#*
+examples
