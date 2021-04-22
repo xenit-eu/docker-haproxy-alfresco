@@ -57,6 +57,11 @@ There are several environment variables available to tweak the behaviour.
 | HAPROXY_BACKEND_FINDER_CHECK     | /                                                 | Check for finder backend. Valid for front proxy.                                                     |
 | HAPROXY_BACKEND_FINDER_COUNT     | 1                                                 | Number of finder backends. Valid for front proxy.                                                    |
 | HAPROXY_SERVICE_FINDER           | alfred-finder                                     | Finder service name (docker DNS). Valid for front proxy.                                             |
+| HAPROXY_INCLUDE_OOI              | false                                             | Whether to include ooi service as a backend. Valid for front proxy.                 |
+| HAPROXY_BACKEND_OOI              | ooi-service                                       | Backend name for ooi service. Valid for front proxy.                                |
+| HAPROXY_BACKEND_OOI_CHECK        | /                                                 | Check for ooi service backend. Valid for front proxy.                                                     |
+| HAPROXY_BACKEND_OOI_COUNT        | 1                                                 | Number of ooi service backends. Valid for front proxy.                                                    |
+| HAPROXY_SERVICE_OOI              | alfresco-ooi-service                              | Ooi service name (docker DNS). Valid for front proxy.                                             |
 | HAPROXY_BACKEND_SOLR             | solr                                              | Backend name for solr. Valid for lb-alfresco-solr.                             |
 | HAPROXY_BACKEND_SOLR_CHECK       | /solr4                                            | Check for solr backend. Valid for lb-alfresco-solr.                             |
 | HAPROXY_BACKEND_SOLR_COUNT       | 1                                                 | Number of solr backends.  Valid for lb-alfresco-solr.                          |

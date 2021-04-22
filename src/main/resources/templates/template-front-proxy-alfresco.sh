@@ -5,6 +5,7 @@ set -e
 HAPROXY_INCLUDE_WORKSPACE=${HAPROXY_INCLUDE_WORKSPACE:-false}
 HAPROXY_INCLUDE_SHARE=${HAPROXY_INCLUDE_SHARE:-false}
 HAPROXY_INCLUDE_FINDER=${HAPROXY_INCLUDE_FINDER:-false}
+HAPROXY_INCLUDE_OOI=${HAPROXY_INCLUDE_OOI:-false}
 HAPROXY_SEND_LOGS=${HAPROXY_SEND_LOGS:-false}
 HAPROXY_INCLUDE_FRONTEND_STATS=${HAPROXY_INCLUDE_FRONTEND_STATS:-true}
 
@@ -77,6 +78,10 @@ if [[ $HAPROXY_INCLUDE_FINDER = 'true' ]]
 then
   echo "  use_backend ${HAPROXY_BACKEND_FINDER:-finder} if { path_beg /finder }"
 fi
+if [[ $HAPROXY_INCLUDE_OOI = 'true' ]]
+then
+  echo "  use_backend ${HAPROXY_BACKEND_OOI:-ooi-service} if { path_beg /ooi-service }"
+fi
 
 ########## alfresco backend
 echo "
@@ -118,6 +123,15 @@ backend ${HAPROXY_BACKEND_FINDER:-finder}
   option httpchk GET ${HAPROXY_BACKEND_FINDER_CHECK:-/}
   http-request replace-uri ([^\ :]*?)/finder(.*) \1/\2
   server-template ${HAPROXY_BACKEND_FINDER:-finder}- ${HAPROXY_BACKEND_FINDER_COUNT:-1} ${HAPROXY_SERVICE_FINDER:-alfred-finder}:80 check resolvers docker init-addr libc,none"
+fi
+
+########## ooi-service backend
+if [[ $HAPROXY_INCLUDE_OOI = 'true' ]]
+then
+echo "
+backend ${HAPROXY_BACKEND_OOI:-ooi-service}
+  option httpchk GET ${HAPROXY_BACKEND_OOI_CHECK:-/}
+  server-template ${HAPROXY_BACKEND_OOI:-ooi-service}- ${HAPROXY_BACKEND_OOI_COUNT:-1} ${HAPROXY_SERVICE_OOI:-alfresco-ooi-service}:9095 check resolvers docker init-addr libc,none"
 fi
 
 ########## resolvers

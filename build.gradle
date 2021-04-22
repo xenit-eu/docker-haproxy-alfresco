@@ -2,7 +2,7 @@ plugins {
     id 'eu.xenit.docker' version '5.2.0'
 }
 
-version = '0.0.1'
+version = '0.0.2'
 boolean isRelease = System.env.BRANCH_NAME?.startsWith("release")
 if (!isRelease)
    version += "-SNAPSHOT"
@@ -19,6 +19,6 @@ dockerFile {
         // Repository to publish on.
         repository = 'hub.xenit.eu/public/haproxy-alfresco'
         tags = ["${version}"]
-        automaticTags = false	
+        automaticTags = false
     }
 }
