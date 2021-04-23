@@ -130,7 +130,6 @@ if [[ $HAPROXY_INCLUDE_OOI = 'true' ]]
 then
 echo "
 backend ${HAPROXY_BACKEND_OOI:-ooi-service}
-  option httpchk GET ${HAPROXY_BACKEND_OOI_CHECK:-/}
   server-template ${HAPROXY_BACKEND_OOI:-ooi-service}- ${HAPROXY_BACKEND_OOI_COUNT:-1} ${HAPROXY_SERVICE_OOI:-alfresco-ooi-service}:9095 check resolvers docker init-addr libc,none"
 fi
 
