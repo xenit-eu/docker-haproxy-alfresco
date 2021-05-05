@@ -57,7 +57,7 @@ frontend ${HAPROXY_FRONTEND_ALFRESCO:-alfresco}
 ########## solr backend
 echo "
 backend ${HAPROXY_BACKEND_SOLR:-solr}
-  option httpchk OPTIONS ${HAPROXY_BACKEND_SOLR_CHECK:-/solr4}
+  option httpchk GET ${HAPROXY_BACKEND_SOLR_CHECK:-/solr4}
   server-template ${HAPROXY_BACKEND_SOLR:-solr}- ${HAPROXY_BACKEND_SOLR_COUNT:-1} ${HAPROXY_SERVICE_SOLR:-solr}:8080 check resolvers docker init-addr libc,none"
 
 ########## resolvers
