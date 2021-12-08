@@ -5,6 +5,7 @@ set -e
 HAPROXY_INCLUDE_WORKSPACE=${HAPROXY_INCLUDE_WORKSPACE:-false}
 HAPROXY_INCLUDE_SHARE=${HAPROXY_INCLUDE_SHARE:-false}
 HAPROXY_INCLUDE_FINDER=${HAPROXY_INCLUDE_FINDER:-false}
+HAPROXY_STRIP_FINDER_PREFIX=${HAPROXY_STRIP_FINDER_PREFIX:-true}
 HAPROXY_INCLUDE_OOI=${HAPROXY_INCLUDE_OOI:-false}
 HAPROXY_SEND_LOGS=${HAPROXY_SEND_LOGS:-false}
 HAPROXY_INCLUDE_FRONTEND_STATS=${HAPROXY_INCLUDE_FRONTEND_STATS:-true}
@@ -87,7 +88,7 @@ fi
 echo "
 backend ${HAPROXY_BACKEND_ALFRESCO:-alfresco}
   option httpchk OPTIONS ${HAPROXY_BACKEND_ALFRESCO_CHECK:-/alfresco/s/api/server}
-  server-template ${HAPROXY_BACKEND_ALFRESCO:-alfresco}- ${HAPROXY_BACKEND_ALFRESCO_COUNT:-1} ${HAPROXY_SERVICE_ALFRESCO:-alfresco}:8080 check resolvers docker init-addr libc,none
+  server-template ${HAPROXY_BACKEND_ALFRESCO:-alfresco}- ${HAPROXY_BACKEND_ALFRESCO_COUNT:-1} ${HAPROXY_SERVICE_ALFRESCO:-alfresco}:${HAPROXY_BACKEND_ALFRESCO_PORT:-8080} check resolvers docker init-addr libc,none
   acl blacklist_alfresco path_sub /proxy/alfresco/api/solr/
   acl blacklist_alfresco path_sub /-default-/proxy/alfresco/api/
   acl blacklist_alfresco path_sub /service/api/solr/
@@ -102,7 +103,7 @@ then
 echo "
 backend ${HAPROXY_BACKEND_SHARE:-share}
   option httpchk OPTIONS ${HAPROXY_BACKEND_SHARE_CHECK:-/share}
-  server-template ${HAPROXY_BACKEND_SHARE:-share}- ${HAPROXY_BACKEND_SHARE_COUNT:-1} ${HAPROXY_SERVICE_SHARE:-share}:8080 check resolvers docker init-addr libc,none"
+  server-template ${HAPROXY_BACKEND_SHARE:-share}- ${HAPROXY_BACKEND_SHARE_COUNT:-1} ${HAPROXY_SERVICE_SHARE:-share}:${HAPROXY_BACKEND_SHARE_PORT:-8080} check resolvers docker init-addr libc,none"
 fi
 
 ########## digital workspace backend
@@ -112,7 +113,7 @@ echo "
 backend ${HAPROXY_BACKEND_WORKSPACE:-workspace}
   option httpchk GET ${HAPROXY_BACKEND_WORKSPACE_CHECK:-/workspace}
   http-request replace-uri ([^\ :]*?)/workspace(.*) \1/\2
-  server-template ${HAPROXY_BACKEND_WORKSPACE:-workspace}- ${HAPROXY_BACKEND_WORKSPACE_COUNT:-1} ${HAPROXY_SERVICE_WORKSPACE:-digital-workspace}:8080 check resolvers docker init-addr libc,none"
+  server-template ${HAPROXY_BACKEND_WORKSPACE:-workspace}- ${HAPROXY_BACKEND_WORKSPACE_COUNT:-1} ${HAPROXY_SERVICE_WORKSPACE:-digital-workspace}:${HAPROXY_BACKEND_WORKSPACE_PORT:-8080} check resolvers docker init-addr libc,none"
 fi
 
 ########## finder backend
@@ -120,9 +121,16 @@ if [[ $HAPROXY_INCLUDE_FINDER = 'true' ]]
 then
 echo "
 backend ${HAPROXY_BACKEND_FINDER:-finder}
-  option httpchk GET ${HAPROXY_BACKEND_FINDER_CHECK:-/}
-  http-request replace-uri ([^\ :]*?)/finder(.*) \1/\2
-  server-template ${HAPROXY_BACKEND_FINDER:-finder}- ${HAPROXY_BACKEND_FINDER_COUNT:-1} ${HAPROXY_SERVICE_FINDER:-alfred-finder}:80 check resolvers docker init-addr libc,none"
+  option httpchk GET ${HAPROXY_BACKEND_FINDER_CHECK:-/}"
+
+if [[ $HAPROXY_STRIP_FINDER_PREFIX = 'true' ]]
+then
+echo "
+  http-request replace-uri ([^\ :]*?)/finder(.*) \1/\2"
+fi
+
+echo "
+    server-template ${HAPROXY_BACKEND_FINDER:-finder}- ${HAPROXY_BACKEND_FINDER_COUNT:-1} ${HAPROXY_SERVICE_FINDER:-alfred-finder}:${HAPROXY_BACKEND_FINDER_PORT:-80} check resolvers docker init-addr libc,none"
 fi
 
 ########## ooi-service backend
@@ -130,7 +138,7 @@ if [[ $HAPROXY_INCLUDE_OOI = 'true' ]]
 then
 echo "
 backend ${HAPROXY_BACKEND_OOI:-ooi-service}
-  server-template ${HAPROXY_BACKEND_OOI:-ooi-service}- ${HAPROXY_BACKEND_OOI_COUNT:-1} ${HAPROXY_SERVICE_OOI:-alfresco-ooi-service}:9095 check resolvers docker init-addr libc,none"
+  server-template ${HAPROXY_BACKEND_OOI:-ooi-service}- ${HAPROXY_BACKEND_OOI_COUNT:-1} ${HAPROXY_SERVICE_OOI:-alfresco-ooi-service}:${HAPROXY_BACKEND_OOI_PORT:-9095} check resolvers docker init-addr libc,none"
 fi
 
 ########## resolvers
