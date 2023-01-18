@@ -17,7 +17,7 @@ dockerFile {
     dockerFile = file("$project.projectDir/src/main/resources/Dockerfile")
     dockerBuild {
         // Repository to publish on.
-        repository = 'hub.xenit.eu/public/haproxy-alfresco'
+        repository = 'private.docker.xenit.eu/customer/xenit/haproxy-alfresco'
         tags = ["${version}"]
         automaticTags = false
     }
