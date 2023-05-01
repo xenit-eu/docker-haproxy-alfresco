@@ -16,7 +16,7 @@ jobs:
         run: |
           echo ${{ secrets.CLOUDSMITH_APIKEY }} | docker login private.docker.xenit.eu --username ${{ secrets.CLOUDSMITH_USER }} --password-stdin
       - name: Build & Publishing
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           cache-read-only: false
           arguments: |
